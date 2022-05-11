@@ -1,0 +1,84 @@
+{
+  "rabbit_version": "3.8.3",
+  "rabbitmq_version": "3.8.3",
+  "users": [
+    {
+      "name": "guest",
+      "password": "guest",
+      "tags": "administrator"
+    }
+  ],
+  "vhost": [
+    {
+      "name": "/"
+    }
+  ],
+  "permissions": [
+    {
+      "user": "guest",
+      "vhost": "/",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    }
+  ],
+  "topic_permissions": [],
+  "parameters": [],
+  "policies": [],
+  "queues": [
+    {
+      "name": "usuario",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-dead-letter-exchange": "registerDLQ",
+        "x-dead-letter-routing-key": "usuarioRoutingKeyDLQ"
+      }
+    },
+    {
+      "name": "usuarioDLQ",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false
+    }
+  ],
+  "exchanges": [
+    {
+      "name": "register",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "registerDLQ",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+  "bindings": [
+    {
+      "source": "register",
+      "vhost": "/",
+      "destination": "usuario",
+      "destination_type": "queue",
+      "routing_key": "usuarioRoutingKey",
+      "arguments": {}
+    },
+    {
+      "source": "registerDLQ",
+      "vhost": "/",
+      "destination": "usuarioDLQ",
+      "destination_type": "queue",
+      "routing_key": "usuarioRoutingKeyDLQ",
+      "arguments": {}
+    }
+  ]
+}
